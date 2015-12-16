@@ -1,14 +1,23 @@
 zookeeper:
   image: wurstmeister/zookeeper
   ports: 
-    - "2181"
+    - 2181:2181
 kafka:
-  build: .
+  image: wurstmeister/kafka:0.8.2.0
+# build: .
   ports:
-    - "9092"
+    - 9092:9092
   links: 
     - zookeeper:zk
   environment:
-    KAFKA_ADVERTISED_HOST_NAME: 192.168.59.103
+    KAFKA_ADVERTISED_HOST_NAME: 192.168.99.100
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
+kafkamanager:
+  image: stonefury/kafkamanager-docker
+  ports:
+    - 9000:9000
+  links:
+    - zookeeper:zk
+  environment:
+    ZKHOSTS: zk:2181
